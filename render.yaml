@@ -4,8 +4,7 @@ services:
     name: legal-automation-n8n
     env: docker
     dockerfilePath: ./Dockerfile
-    plan: starter  free 
-  
+    plan: free
     healthCheckPath: /healthz
     envVars:
       # N8N Basic Configuration
@@ -42,7 +41,7 @@ services:
       
       # N8N Application Settings
       - key: N8N_HOST
-        value: legal-automation-n8n.onrender.com  # Update with your service name
+        value: legal-automation-n8n.onrender.com
       - key: N8N_PORT
         value: 5678
       - key: N8N_PROTOCOL
@@ -62,21 +61,9 @@ services:
       
       # API Keys (add these via Render dashboard for security)
       - key: OPENAI_API_KEY
-        sync: false  # Set manually in Render dashboard
+        sync: false
       - key: FILEVINE_API_BASE
         value: https://api.filevine.com/v1
       
       # Custom Application Settings
       - key: CUSTOMER_WEBHOOK_BASE
-        value: https://legal-automation-n8n.onrender.com/webhook
-      - key: NODE_ENV
-        value: production
-      - key: LOG_LEVEL
-        value: info
-
-databases:
-  # PostgreSQL Database for N8N and Customer Data
-  - name: legal-automation-db
-    databaseName: legal_automation
-    user: n8n_user
-    plan: free 
