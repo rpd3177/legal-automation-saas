@@ -61,7 +61,7 @@ services:
       
       # API Keys (add these via Render dashboard for security)
       - key: OPENAI_API_KEY
-        sync: false
+        value: ""
       - key: FILEVINE_API_BASE
         value: https://api.filevine.com/v1
       
