@@ -4,7 +4,8 @@ services:
     name: legal-automation-n8n
     env: docker
     dockerfilePath: ./Dockerfile
-    plan: starter  # $7/month - upgrade to standard ($25) when scaling
+    plan: starter  free 
+  
     healthCheckPath: /healthz
     envVars:
       # N8N Basic Configuration
@@ -78,4 +79,4 @@ databases:
   - name: legal-automation-db
     databaseName: legal_automation
     user: n8n_user
-    plan: starter  # $7/month - 1GB storage
+    plan: free 
