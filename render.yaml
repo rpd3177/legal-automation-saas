@@ -1,0 +1,81 @@
+services:
+  # Main N8N Application
+  - type: web
+    name: legal-automation-n8n
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: starter  # $7/month - upgrade to standard ($25) when scaling
+    healthCheckPath: /healthz
+    envVars:
+      # N8N Basic Configuration
+      - key: N8N_BASIC_AUTH_ACTIVE
+        value: true
+      - key: N8N_BASIC_AUTH_USER
+        value: admin
+      - key: N8N_BASIC_AUTH_PASSWORD
+        generateValue: true
+      
+      # Database Configuration (auto-populated from database service)
+      - key: DB_TYPE
+        value: postgresdb
+      - key: DB_POSTGRESDB_HOST
+        fromDatabase:
+          name: legal-automation-db
+          property: host
+      - key: DB_POSTGRESDB_PORT
+        fromDatabase:
+          name: legal-automation-db
+          property: port
+      - key: DB_POSTGRESDB_DATABASE
+        fromDatabase:
+          name: legal-automation-db
+          property: database
+      - key: DB_POSTGRESDB_USER
+        fromDatabase:
+          name: legal-automation-db
+          property: user
+      - key: DB_POSTGRESDB_PASSWORD
+        fromDatabase:
+          name: legal-automation-db
+          property: password
+      
+      # N8N Application Settings
+      - key: N8N_HOST
+        value: legal-automation-n8n.onrender.com  # Update with your service name
+      - key: N8N_PORT
+        value: 5678
+      - key: N8N_PROTOCOL
+        value: https
+      - key: WEBHOOK_URL
+        value: https://legal-automation-n8n.onrender.com/
+      - key: GENERIC_TIMEZONE
+        value: America/New_York
+      - key: N8N_METRICS
+        value: true
+      
+      # Security Settings
+      - key: N8N_SECURE_COOKIE
+        value: true
+      - key: N8N_ENCRYPTION_KEY
+        generateValue: true
+      
+      # API Keys (add these via Render dashboard for security)
+      - key: OPENAI_API_KEY
+        sync: false  # Set manually in Render dashboard
+      - key: FILEVINE_API_BASE
+        value: https://api.filevine.com/v1
+      
+      # Custom Application Settings
+      - key: CUSTOMER_WEBHOOK_BASE
+        value: https://legal-automation-n8n.onrender.com/webhook
+      - key: NODE_ENV
+        value: production
+      - key: LOG_LEVEL
+        value: info
+
+databases:
+  # PostgreSQL Database for N8N and Customer Data
+  - name: legal-automation-db
+    databaseName: legal_automation
+    user: n8n_user
+    plan: starter  # $7/month - 1GB storage

@@ -1,0 +1,43 @@
+# Use official N8N image as base
+FROM n8nio/n8n:latest
+
+# Switch to root for installations
+USER root
+
+# Install additional dependencies
+RUN apk add --no-cache \
+    curl \
+    postgresql-client \
+    && npm install -g \
+    @n8n/typeorm \
+    pdf-parse \
+    mammoth
+
+# Create directories for custom content
+RUN mkdir -p /home/node/.n8n/custom \
+    /home/node/.n8n/workflows \
+    /home/node/.n8n/backups
+
+# Copy custom workflows and configurations
+COPY --chown=node:node ./workflows/ /home/node/.n8n/workflows/
+COPY --chown=node:node ./custom-nodes/ /home/node/.n8n/custom/
+
+# Copy health check script
+COPY --chown=node:node ./scripts/healthcheck.sh /usr/local/bin/healthcheck.sh
+RUN chmod +x /usr/local/bin/healthcheck.sh
+
+# Switch back to node user for security
+USER node
+
+# Set working directory
+WORKDIR /home/node
+
+# Expose N8N port
+EXPOSE 5678
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+  CMD /usr/local/bin/healthcheck.sh
+
+# Start N8N with custom configuration
+CMD ["n8n", "start"]

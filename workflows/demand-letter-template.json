@@ -1,0 +1,53 @@
+{
+    "name": "Legal Demand Letter Generator",
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "demand-letter/{{$parameter.customer_token}}",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "id": "webhook-trigger",
+        "name": "Customer Webhook",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 1,
+        "position": [240, 300],
+        "webhookId": "customer-demand-letter"
+      },
+      {
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={\n  \"status\": \"success\",\n  \"message\": \"Demand letter workflow triggered\",\n  \"timestamp\": \"{{$now.toISOString()}}\"\n}",
+          "options": {}
+        },
+        "id": "success-response",
+        "name": "Success Response",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1,
+        "position": [460, 300]
+      }
+    ],
+    "connections": {
+      "Customer Webhook": {
+        "main": [
+          [
+            {
+              "node": "Success Response",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "pinData": {},
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "staticData": null,
+    "tags": [],
+    "triggerCount": 0,
+    "updatedAt": "2025-01-01T00:00:00.000Z",
+    "versionId": "1"
+  }
