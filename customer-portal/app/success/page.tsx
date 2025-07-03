@@ -1,4 +1,5 @@
 'use client'
+export const dynamic = 'force-dynamic';
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
@@ -46,5 +47,3 @@ export default function SuccessPage() {
     </div>
   )
 }
-
-export const dynamic = 'force-dynamic';
